@@ -21,10 +21,12 @@ def data_sync():
 
 def run():
     sync_all_nodes()
-    prop_dir = os.path.join(current_dir, '..', 'etc', 'bareon')
+    paste_conf = os.path.join(os.sep, 'etc', 'bareon-api', 'bareon-api-paste.ini')
+    if not os.path.lexists(paste_conf):
+        paste_conf = os.path.join(current_dir, '..', 'etc', 'bareon', 'bareon-api-paste.ini')
 
     application = deploy.loadapp(
-        'config:{prop_dir}/bareon-api-paste.ini'.format(prop_dir=prop_dir),
+        'config:{paste_conf}'.format(paste_conf=paste_conf),
         name='main',
         relative_to='.')
 
