@@ -15,22 +15,25 @@
 #    under the License.
 
 import pecan
+from pecan import rest
 
-from bareon_api.api.controllers import partitioning
-from bareon_api.api.controllers import actions
 from bareon_api.common import utils
+from bareon_api.data_sync import sync_all_nodes
 
 
 LOG = utils.getLogger(__name__)
 
+class SyncAllController(rest.RestController):
 
-class V1Controller(object):
-    """Root controller for the v1 API"""
+    @pecan.expose(template='json')
+    def post(self):
+        sync_all_nodes()
 
-    def __init__(self):
-        LOG.debug('=== Creating V1Controller ===')
-        self.nodes = partitioning.NodesController()
-        self.actions = actions.GlobalActionsController()
+
+class GlobalActionsController(rest.RestController):
+    """Global Actions controller"""
+
+    sync_all = SyncAllController()
 
     @pecan.expose(generic=True)
     def index(self):
