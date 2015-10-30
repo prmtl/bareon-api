@@ -221,14 +221,15 @@ def get_nodes_and_disks():
     for node in get_nodes_discovery_data():
         if node.get('discovery') is None:
             node['discovery'] = None
+        node_id = node['id']
 
-        disks[node['mac']] = filter_disks(node['discovery'].get('block_device', {}))
-        nodes[node['mac']] = {
-            'disks': disks[node['mac']],
+        disks[node_id] = filter_disks(node['discovery'].get('block_device', {}))
+        nodes[node_id] = {
+            'disks': disks[node_id],
             # NOTE(prmtl): it really doesn't matter if it's mac
             # or anything as long as it is consistent between
             # services in PoC
-            'id': node['mac'],
+            'id': node_id,
         }
     return nodes, disks
 
@@ -241,19 +242,19 @@ def generate_spaces(nodes, disks):
     vgs = {}
     lvs = {}
 
-    for mac in nodes.keys():
-        if not DISKS.get(mac):
-            print('Cannot find disks for node {0}'.format(mac))
+    for node_id in nodes.keys():
+        if not DISKS.get(node_id):
+            print('Cannot find disks for node {0}'.format(node_id))
             continue
 
-        disk = DISKS[mac][0]
+        disk = DISKS[node_id][0]
 
-        parteds[mac], partitions[mac] = make_parted_and_partitions(disk)
-        fss[mac] = deepcopy(FS)
-        pvs[mac] = make_pv(disk)
-        vgs[mac] = make_vg(pvs[mac].values())
-        vg = vgs[mac].values()[0]
-        lvs[mac] = make_lv(vg)
+        parteds[node_id], partitions[node_id] = make_parted_and_partitions(disk)
+        fss[node_id] = deepcopy(FS)
+        pvs[node_id] = make_pv(disk)
+        vgs[node_id] = make_vg(pvs[node_id].values())
+        vg = vgs[node_id].values()[0]
+        lvs[node_id] = make_lv(vg)
 
     return fss, partitions, parteds, pvs, vgs, lvs
 
