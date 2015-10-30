@@ -221,7 +221,7 @@ def get_nodes_and_disks():
     for node in get_nodes_discovery_data():
         if node.get('discovery') is None:
             node['discovery'] = None
-        node_id = node['uuid']
+        node_id = node['id']
 
         disks[node_id] = filter_disks(node['discovery'].get('block_device', {}))
         nodes[node_id] = {
@@ -229,7 +229,7 @@ def get_nodes_and_disks():
             # NOTE(prmtl): it really doesn't matter if it's mac
             # or anything as long as it is consistent between
             # services in PoC
-            'uuid': node_id,
+            'id': node_id,
         }
     return nodes, disks
 
