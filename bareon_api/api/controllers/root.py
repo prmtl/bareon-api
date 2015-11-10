@@ -16,6 +16,8 @@
 
 import pecan
 
+from bareon_api.api.controllers import partitioning
+from bareon_api.api.controllers import actions
 from bareon_api.common import utils
 
 
@@ -27,11 +29,9 @@ class V1Controller(object):
 
     def __init__(self):
         LOG.debug('=== Creating V1Controller ===')
+        self.nodes = partitioning.NodesController()
+        self.actions = actions.GlobalActionsController()
 
     @pecan.expose(generic=True)
     def index(self):
         pecan.abort(405)  # HTTP 405 Method Not Allowed as default
-
-    @index.when(method='GET', template='json')
-    def on_get(self):
-        return {'message': 'hello world'}

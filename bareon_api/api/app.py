@@ -22,7 +22,6 @@ from bareon_api.common import config
 
 
 def main_app(global_config):
-    config.CONF.debug = True
     log.setup(config.CONF, 'bareon_api')
     return pecan.Pecan(
         root.V1Controller(),

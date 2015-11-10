@@ -14,10 +14,27 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from bareon_api.tests import base
+import pecan
+from pecan import rest
+
+from bareon_api.common import utils
+from bareon_api.data_sync import sync_all_nodes
 
 
-class CheckApiIsWorking(base.FunctionalTestCase):
+LOG = utils.getLogger(__name__)
 
-    def test_message_on_v1_root(self):
-        self.app.get('/')
+class SyncAllController(rest.RestController):
+
+    @pecan.expose(template='json')
+    def post(self):
+        sync_all_nodes()
+
+
+class GlobalActionsController(rest.RestController):
+    """Global Actions controller"""
+
+    sync_all = SyncAllController()
+
+    @pecan.expose(generic=True)
+    def index(self):
+        pecan.abort(405)  # HTTP 405 Method Not Allowed as default
