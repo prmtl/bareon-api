@@ -172,6 +172,23 @@ class DisksController(rest.RestController):
         return get_or_404(models.DISKS, node_id)
 
 
+class ReposController(rest.RestController):
+    model = models.Repo
+    collection = models.REPOS
+
+    @pecan.expose(template='json')
+    def get_all(self, node_id):
+        node_id = node_id.lower()
+        return get_or_404(self.collection, node_id)
+
+    @pecan.expose(template='json')
+    def put(self, node_id):
+        node_id = node_id.lower()
+        get_or_404(self.collection, node_id)
+        models.set_repos_for_node(node_id, pecan.request.json)
+        return models.REPOS[node_id]
+
+
 class NodesController(rest.RestController):
 
     disks = DisksController()
@@ -181,6 +198,7 @@ class NodesController(rest.RestController):
     pvs = PVController()
     vgs = VGController()
     partitioning = PartitioningCotroller()
+    repos = ReposController()
 
     @pecan.expose(template='json')
     def get_one(self, node_id):

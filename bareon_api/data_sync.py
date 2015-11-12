@@ -21,19 +21,23 @@ invoked manually using CLI or (TODO) by notification from
 discovery service
 """
 
-import six
-
 from bareon_api import models
-from bareon_api.models import generate_spaces, get_nodes_and_disks, set_spaces, set_nodes_and_disks
+from bareon_api.models import (
+    generate_spaces,
+    get_nodes_and_disks,
+    set_nodes_and_disks,
+    set_repos,
+    set_spaces,
+)
+
 
 class DataSourceBase(object):
 
     def sync_all(self):
-        raise NotImplemented
-        
-    def sync_list(self, node_ids):
-        raise NotImplemented
+        raise NotImplementedError
 
+    def sync_list(self, node_ids):
+        raise NotImplementedError
 
 
 class DiscoveryDriver(DataSourceBase):
@@ -44,11 +48,12 @@ class DiscoveryDriver(DataSourceBase):
         set_nodes_and_disks(*generate_spaces(models.NODES, models.DISKS))
 
     def sync_list(self, node_ids):
-        raise NotImplemented
+        raise NotImplementedError
 
 
 def sync_all_nodes():
     DiscoveryDriver().sync_all()
+    set_repos(models.NODES)
 
 
 def sync_list_nodes(node_ids):

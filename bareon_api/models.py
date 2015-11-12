@@ -14,9 +14,11 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 from copy import deepcopy
+import os
 import random
 
 from fuel_agent import objects
+from oslo_serialization import jsonutils
 import requests
 
 from bareon_api.common.config import CONF
@@ -53,8 +55,14 @@ class VolumeGroup(JsonifyMixin, objects.VG):
     pass
 
 
+class Repo(objects.DEBRepo):
+
+    def __json__(self):
+        return self.__dict__
+
+
 FS = {
-    # ???(prmtl) now we identify file system by lablel
+    # ???(prmtl) now we identify file system by label
     # but should be considered to find a better way
     'boot': FileSystem(
         device='/dev/sda3',
@@ -182,6 +190,14 @@ def make_pv(disk):
     }
 
 
+def make_repos(repos):
+    repos_objs = []
+    for repo in repos:
+        repo.pop('type')
+        repos_objs.append(Repo(**repo))
+    return repos_objs
+
+
 def random_mac():
     mac = [
         0x00, 0x24, 0x81,
@@ -269,6 +285,26 @@ PARTEDS = {}
 PVS = {}
 VGS = {}
 LVS = {}
+
+REPOS = {}
+
+
+def set_repos_for_node(node_id, repos_dict):
+    global REPOS
+    if node_id not in NODES:
+        print('Cannot find disks for node {0}'.format(node_id))
+        return
+    REPOS[node_id] = make_repos(repos_dict)
+
+
+def set_repos(nodes):
+    global REPOS
+    with open(os.path.join(os.path.dirname(__file__),
+                           'fixtures/repos_ubuntu.json')) as fp:
+        repos = jsonutils.load(fp)
+
+    for node_id in nodes.keys():
+        set_repos_for_node(node_id, deepcopy(repos))
 
 
 def set_spaces(*args):

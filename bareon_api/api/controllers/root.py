@@ -16,8 +16,8 @@
 
 import pecan
 
-from bareon_api.api.controllers import partitioning
 from bareon_api.api.controllers import actions
+from bareon_api.api.controllers import nodes
 from bareon_api.common import utils
 
 
@@ -29,7 +29,7 @@ class V1Controller(object):
 
     def __init__(self):
         LOG.debug('=== Creating V1Controller ===')
-        self.nodes = partitioning.NodesController()
+        self.nodes = nodes.NodesController()
         self.actions = actions.GlobalActionsController()
 
     @pecan.expose(generic=True)
