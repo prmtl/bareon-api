@@ -17,3 +17,27 @@ Features
 --------
 
 * TODO
+
+
+CLI/Services
+============
+
+List of available CLI tools/services provided by bareon-api
+
+bareon-api
+----------
+
+Starts bareon-api instance for serving API endpoints
+
+
+bareon-api-db-manage
+--------------------
+
+Manages alembic migrations
+
+
+bareon-api-data-sync
+--------------------
+
+Synchronise data from discovery services and creates entreis in
+bareon-api database (nodes, disks, volumes, etc.)

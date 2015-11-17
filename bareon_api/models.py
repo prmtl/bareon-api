@@ -22,6 +22,7 @@ from oslo_serialization import jsonutils
 import requests
 
 from bareon_api.common.config import CONF
+from bareon_api.db import api as db_api
 
 
 class JsonifyMixin(object):

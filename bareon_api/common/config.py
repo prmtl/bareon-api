@@ -17,6 +17,7 @@
 import logging
 
 from oslo_config import cfg
+from oslo_db import options as db_options
 from oslo_log import log
 
 
@@ -45,6 +46,10 @@ opt_group = cfg.OptGroup(
     title='Options for the api service')
 
 
+_SQLITE_DB = 'bareon_api.sqlite'
+_DEFAULT_SQL_CONNECTION = 'sqlite:////tmp/{0}'.format(_SQLITE_DB)
+
+
 def make_config():
     conf = cfg.ConfigOpts()
 
@@ -57,6 +62,8 @@ def make_config():
     conf.register_cli_opts(DISCOVERY_SERVICE_OPTS)
 
     log.register_options(conf)
+
+    db_options.set_defaults(conf, _DEFAULT_SQL_CONNECTION, _SQLITE_DB)
     return conf
 
 
