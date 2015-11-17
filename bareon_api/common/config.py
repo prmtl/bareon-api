@@ -61,9 +61,7 @@ def make_config():
 
 
 def parse_args(conf, args=None):
-    import sys
-
-    conf(args=args if args else sys.argv[1:],
+    conf(args=args if args else [],
          project='bareon-api',
          version='1.0.0')
 
