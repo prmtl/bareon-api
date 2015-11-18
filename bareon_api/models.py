@@ -310,6 +310,14 @@ def set_repos(nodes):
 
 def set_spaces(*args):
     global NODES, DISKS
+    from oslo_context import context
+
+    nodes, _ = args
+    ctx = context.RequestContext()
+    # import pdb; pdb.set_trace()
+    for node_id in nodes.keys():
+        db_api.add_nodes(ctx, node_id)
+
     NODES, DISKS = args
 
 
